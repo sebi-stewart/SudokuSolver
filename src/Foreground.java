@@ -28,10 +28,6 @@ public class Foreground extends JComponent {
         repaint();
     }
 
-    public void removeNumber(){
-        numbers.removeLast();
-        repaint();
-    }
 
     public void clearNumbers(){
         numbers.clear();

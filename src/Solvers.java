@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 
 public class Solvers {
 
@@ -15,10 +15,18 @@ public class Solvers {
 
     public void iterateCells(DisplayBoards window) throws InterruptedException {
         List<Integer> mutableCells = sudokuBoard.getMutableCells();
+        Runnable doForeground = () -> window.createForeground(sudokuBoard);
+
         int x, y, val;
+        int INTERVAL = 10;
+        int count = 0;
         for(int i = 0; i < mutableCells.size(); i++){
-            window.createForeground(sudokuBoard);
-            Thread.sleep(1);
+
+            if (count == INTERVAL) {
+                SwingUtilities.invokeLater(doForeground);
+                Thread.sleep(1);
+                count = 0;
+            } count ++;
 
             x = mutableCells.get(i)%9;
             y = mutableCells.get(i)/9;
