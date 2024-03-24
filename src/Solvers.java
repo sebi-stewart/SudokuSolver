@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Solvers {
 
@@ -12,10 +13,13 @@ public class Solvers {
         sudokuBoard = sudoku;
     }
 
-    public void iterateCells(){
+    public void iterateCells(DisplayBoards window) throws InterruptedException {
         List<Integer> mutableCells = sudokuBoard.getMutableCells();
         int x, y, val;
         for(int i = 0; i < mutableCells.size(); i++){
+            window.createForeground(sudokuBoard);
+            Thread.sleep(1);
+
             x = mutableCells.get(i)%9;
             y = mutableCells.get(i)/9;
             val = sudokuBoard.getCell(x, y);

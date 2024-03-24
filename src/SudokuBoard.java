@@ -23,7 +23,11 @@ public class SudokuBoard {
                 {0, 0, 0, 4, 1, 9, 0, 0, 5},
                 {0, 0, 0, 0, 8, 0, 0, 7, 9}
         };
-        this.board = this.initialBoard.clone();
+        this.board = new int[this.initialBoard.length][this.initialBoard[0].length];
+        for (int i=0; i < 9; i++){
+            this.board[i] = Arrays.copyOf(this.initialBoard[i], this.initialBoard[i].length);
+        }
+
         for(int y = 0; y < 9; y++){
             for (int x = 0; x < 9; x++) {
                 if (this.initialBoard[y][x] == 0){
@@ -85,6 +89,10 @@ public class SudokuBoard {
 
     public void setCell(int x, int y, int val){
         this.board[y][x] = val;
+    }
+
+    public int[][] getInitialBoard(){
+        return initialBoard;
     }
 
 

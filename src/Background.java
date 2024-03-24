@@ -35,6 +35,35 @@ public class Background extends JComponent{
         repaint();
     }
 
+    private static class Number{
+        final String data;
+        final int x;
+        final int y;
+        final Color color;
+
+        public Number(String data, int x, int y, Color color){
+            this.data = data;
+            this.x = x;
+            this.y = y;
+            this.color = color;
+        }
+    }
+
+    private final LinkedList<Background.Number> numbers = new LinkedList<>();
+
+    public void addNumber(String data, int x, int y){
+        addNumber(data, x, y, Color.black);
+    }
+    public void addNumber(String data, int x, int y, Color color){
+        numbers.add(new Background.Number(data, x, y, color));
+        repaint();
+    }
+
+    public void clearNumbers(){
+        numbers.clear();
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -43,6 +72,12 @@ public class Background extends JComponent{
             g.drawLine(
                     line.x1, line.y1,
                     line.x2, line.y2);
+        }
+        for (Background.Number number : numbers){
+            g.setColor(number.color);
+            g.drawString(
+                    number.data,
+                    number.x, number.y);
         }
     }
 

@@ -6,6 +6,10 @@ import javax.swing.*;
 public class DisplayBoards extends JFrame{
 
     final Background bgComp = new Background();
+    final Foreground fgComp = new Foreground();
+    final Dimension windowSize;
+    final int xRatio;
+    final int yRatio;
 
     DisplayBoards(){
         this.setTitle("Sudoku Solver");
@@ -18,32 +22,74 @@ public class DisplayBoards extends JFrame{
         this.setVisible(true); // Show the window
 
         this.getContentPane().setBackground(new Color(255, 255, 255));
+
+        windowSize = this.getSize();
+        xRatio = (int)windowSize.getWidth()/9;
+        yRatio = (int)windowSize.getHeight()/9;
+
     }
 
-    public void createBackground(){
+    public void createBackground(SudokuBoard sudoku){
         bgComp.clearLines();
+        bgComp.clearNumbers();
 
-        Dimension windowSize = this.getSize();
         int xCoords, yCoords;
         bgComp.setPreferredSize(windowSize);
         this.getContentPane().add(bgComp, BorderLayout.CENTER);
 
+        // Separating Lines
         for(int i = 0; i < 8; i++){
-            xCoords = (int) ((i+1)*windowSize.getWidth()/9);
+            xCoords = (i+1)*xRatio;
             bgComp.addLine(xCoords, 0, xCoords, (int)windowSize.getHeight());
-            yCoords = (int) ((i+1)*windowSize.getHeight()/9);
+            yCoords = (i+1)*yRatio;
             bgComp.addLine(0, yCoords , (int)windowSize.getWidth(), yCoords);
+        }
+
+        // Initial Numbers
+        bgComp.setFont(bgComp.getFont().deriveFont((float) xRatio));
+        int[][] initialBoard = sudoku.getInitialBoard();
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (initialBoard[y][x] != 0){
+                    bgComp.addNumber(
+                            Integer.toString(initialBoard[y][x]),
+                            x*xRatio + (int)(xRatio/4.5), (y+1)*yRatio - yRatio/9);
+                }
+            }
         }
 
         this.pack();
         this.setVisible(true);
     }
 
+    public void createForeground(SudokuBoard sudoku){
+        fgComp.clearNumbers();
+
+        fgComp.setPreferredSize(windowSize);
+        this.getContentPane().add(fgComp, BorderLayout.CENTER);
+
+        // Fill with the new / currently being generated numbers
+        fgComp.setFont(bgComp.getFont());
+        int[][] initialBoard = sudoku.getInitialBoard();
+        int[][] filledBoard = sudoku.getBoard();
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (initialBoard[y][x] == 0 && filledBoard[y][x] != 0){
+                    fgComp.addNumber(
+                            Integer.toString(filledBoard[y][x]),
+                            x*xRatio + (int)(xRatio/4.5), (y+1)*yRatio - yRatio/9);
+                }
+            }
+        }
+    }
 
 
     public static void main(String[] args){
         DisplayBoards window = new DisplayBoards();
-        window.createBackground();
+        SudokuBoard sudokuBoard = new SudokuBoard();
+
+        window.createBackground(sudokuBoard);
+        window.createForeground(sudokuBoard);
 
 
 
